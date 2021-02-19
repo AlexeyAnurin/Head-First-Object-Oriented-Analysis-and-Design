@@ -1,53 +1,39 @@
 package ru.alexanurin.lib.Chap5;
 
+import org.omg.CORBA.OBJ_ADAPTER;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 public abstract class InstrumentSpec {
 
-    private BuilderEnum builder;
-    private String model;
-    private TypeEnum type;
-    private WoodEnum backWood;
-    private WoodEnum topWood;
+    private Map properties;
 
-    public InstrumentSpec(BuilderEnum builder, String model, TypeEnum type, WoodEnum backWood, WoodEnum topWood) {
-        this.builder = builder;
-        this.model = model;
-        this.type = type;
-        this.backWood = backWood;
-        this.topWood = topWood;
+    public InstrumentSpec(Map properties) {
+        if (properties == null) {
+            this.properties = new HashMap();
+        } else {
+            this.properties = new HashMap(properties);
+        }
     }
 
-    public BuilderEnum getBuilder() {
-        return builder;
+    public Object getProperty(String propertyName) {
+        return properties.get(propertyName);
     }
 
-    public WoodEnum getTopWood() {
-        return topWood;
+    public Map getProperties() {
+        return properties;
     }
 
-    public TypeEnum getType() {
-        return type;
-    }
-
-    public WoodEnum getBackWood() {
-        return backWood;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public boolean matches(InstrumentSpec other_InstrumentSpec){
-        if (this.builder != other_InstrumentSpec.builder)
-            return false;
-        if (this.model != null && !this.model.equals("") && !this.model.equals(other_InstrumentSpec.model))
-            return false;
-        if (this.type != other_InstrumentSpec.type)
-            return false;
-        if (this.backWood != other_InstrumentSpec.backWood)
-            return false;
-        if (this.topWood != other_InstrumentSpec.topWood)
-            return false;
-
+    public boolean matches(InstrumentSpec otherSpec) {
+        for (Iterator i = otherSpec.getProperties().keySet().iterator(); i.hasNext(); ) {
+            String properyName = (String) i.next();
+            if (!properties.get(properyName).equals(otherSpec.getProperty(properyName))) {
+                otherSpec.getProperty(properyName);
+                return false;
+            }
+        }
         return true;
     }
 }
